@@ -1,9 +1,19 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
-import { MapPanel } from "@/components/MapPanel";
 import { InfoPanel } from "@/components/InfoPanel";
 import { MapFilter } from "@/components/MapFilter";
+
+const MapPanel = dynamic(
+  () =>
+    import("@/components/MapPanel").then(
+      (mod) => mod.MapPanel
+    ),
+  {
+    ssr: false,
+  }
+);
 
 export default function PublicPetaPage() {
   const [filter, setFilter] = useState("Seluruh Indonesia");
