@@ -1,17 +1,32 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Radar } from "lucide-react";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     setLoading(true);
-    setTimeout(() => setLoading(false), 1500);
+
+    setTimeout(() => {
+      if (email.endsWith("@admin.com")) {
+        router.push("/admin/dashboard");
+      } else if (email.endsWith("@stackholder.com")) {
+        router.push("/stackholder/dashboard");
+      } else {
+        alert("Email tidak dikenali");
+      }
+
+      setLoading(false);
+    }, 1500);
   };
 
   return (
@@ -23,8 +38,6 @@ export default function LoginPage() {
       }}
     >
       <div className="w-full max-w-5xl min-h-[620px] rounded-3xl overflow-hidden flex shadow-2xl border border-white/10 relative">
-
-        {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -32,21 +45,20 @@ export default function LoginPage() {
               "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600')",
           }}
         />
+
         <div className="absolute inset-0 bg-gradient-to-r from-[#031427]/95 via-[#031427]/80 to-[#031427]/60" />
 
-        {/* LEFT SECTION */}
         <section className="relative z-10 flex-1 flex flex-col justify-between p-10 lg:p-14">
-          {/* Logo */}
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center">
               <Radar className="w-5 h-5 text-cyan-400" />
             </div>
+
             <span className="text-white font-black text-xl tracking-tight">
               AQUAVION
             </span>
           </div>
 
-          {/* Hero Text */}
           <div>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold uppercase tracking-widest mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
@@ -54,37 +66,48 @@ export default function LoginPage() {
             </span>
 
             <h1 className="text-5xl lg:text-6xl font-black text-white leading-tight mb-5 tracking-tight">
-              LINDUNGI<br />
-              <span className="text-cyan-400">PESISIR</span><br />
+              LINDUNGI
+              <br />
+              <span className="text-cyan-400">PESISIR</span>
+              <br />
               INDONESIA
             </h1>
 
             <p className="text-slate-400 max-w-sm leading-relaxed text-sm">
-              Platform prediksi abrasi berbasis AI dan data satelit multispektral
-              untuk melindungi garis pantai Indonesia secara real-time.
+              Platform prediksi abrasi berbasis AI dan data satelit
+              multispektral untuk melindungi garis pantai Indonesia secara
+              real-time.
             </p>
           </div>
 
-          {/* Stats */}
           <div className="flex gap-6">
             <div>
               <p className="text-2xl font-black text-cyan-400">200+</p>
-              <p className="text-xs text-slate-500 uppercase tracking-widest">Titik Pantau</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest">
+                Titik Pantau
+              </p>
             </div>
+
             <div className="w-px bg-white/10" />
+
             <div>
               <p className="text-2xl font-black text-lime-400">98.2%</p>
-              <p className="text-xs text-slate-500 uppercase tracking-widest">Akurasi Model</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest">
+                Akurasi Model
+              </p>
             </div>
+
             <div className="w-px bg-white/10" />
+
             <div>
               <p className="text-2xl font-black text-white">12K+</p>
-              <p className="text-xs text-slate-500 uppercase tracking-widest">Ha Dipantau</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest">
+                Ha Dipantau
+              </p>
             </div>
           </div>
         </section>
 
-        {/* RIGHT SECTION */}
         <section className="relative z-10 flex items-center justify-center w-full max-w-md p-6 lg:p-10">
           <div
             className="w-full rounded-2xl p-8 border border-white/10 shadow-2xl"
@@ -94,19 +117,24 @@ export default function LoginPage() {
             }}
           >
             <div className="mb-8">
-              <h2 className="text-2xl font-black text-white mb-1">Selamat Datang</h2>
-              <p className="text-slate-400 text-sm">Masuk ke dashboard AQUAVION</p>
+              <h2 className="text-2xl font-black text-white mb-1">
+                Selamat Datang
+              </h2>
+
+              <p className="text-slate-400 text-sm">
+                Masuk ke dashboard AQUAVION
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email */}
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                   Email
                 </label>
+
                 <input
                   type="email"
-                  placeholder="admin@aquavion.id"
+                  placeholder="admin@admin.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -114,11 +142,11 @@ export default function LoginPage() {
                 />
               </div>
 
-              {/* Password */}
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                   Password
                 </label>
+
                 <input
                   type="password"
                   placeholder="••••••••"
@@ -129,7 +157,6 @@ export default function LoginPage() {
                 />
               </div>
 
-              {/* Forgot */}
               <div className="flex justify-end">
                 <a
                   href="#"
@@ -139,7 +166,6 @@ export default function LoginPage() {
                 </a>
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
@@ -147,10 +173,27 @@ export default function LoginPage() {
               >
                 {loading ? (
                   <>
-                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                    <svg
+                      className="animate-spin w-4 h-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8z"
+                      />
                     </svg>
+
                     Memverifikasi...
                   </>
                 ) : (
@@ -158,30 +201,47 @@ export default function LoginPage() {
                 )}
               </button>
 
-              {/* Divider */}
               <div className="flex items-center gap-3 my-2">
                 <div className="flex-1 h-px bg-white/10" />
-                <span className="text-xs text-slate-600 font-semibold uppercase tracking-widest">atau</span>
+
+                <span className="text-xs text-slate-600 font-semibold uppercase tracking-widest">
+                  atau
+                </span>
+
                 <div className="flex-1 h-px bg-white/10" />
               </div>
 
-              {/* Google */}
               <button
                 type="button"
                 className="w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 text-slate-300 text-sm font-semibold transition flex items-center justify-center gap-2"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  />
                 </svg>
+
                 Masuk dengan Google
               </button>
 
-              {/* Back to home */}
               <p className="text-center text-xs text-slate-500 pt-1">
-                <a href="/" className="text-cyan-400 hover:text-cyan-300 font-bold transition">
+                <a
+                  href="/"
+                  className="text-cyan-400 hover:text-cyan-300 font-bold transition"
+                >
                   ← Kembali ke Beranda
                 </a>
               </p>

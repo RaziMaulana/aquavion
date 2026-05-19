@@ -39,9 +39,6 @@ export default function AdminReportPage() {
     agentStatus,
   } = useAgentStore();
 
-  // PENTING:
-  // memastikan store aktif saat page dibuka,
-  // tanpa mematikan agent ketika keluar halaman
   useEffect(() => {
     initializeAgent();
   }, [initializeAgent]);
@@ -109,47 +106,74 @@ export default function AdminReportPage() {
   ).length;
 
   // CSV EXPORT
+  const [exportStatus, setExportStatus] = useState<"idle" | "success" | "empty">("idle");
+
+  const escapeCsvField = (value: string | number): string => {
+    const str = String(value);
+    if (str.includes('"') || str.includes(',') || str.includes('\n')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  };
+
   const exportCSV = () => {
-    if (!analysisValues.length) return;
+    if (!analysisValues.length) {
+      setExportStatus("empty");
+      setTimeout(() => setExportStatus("idle"), 2000);
+      return;
+    }
 
     const headers = [
       "Pantai",
-      "Skor",
-      "Level",
-      "Gelombang",
-      "Arus",
-      "Shoreline",
-      "Prediksi",
-      "Waktu",
+      "Skor Risiko",
+      "Level Risiko",
+      "Tinggi Gelombang (m)",
+      "Kecepatan Arus (m/s)",
+      "Perubahan Garis Pantai (m/yr)",
+      "Prediksi 5 Tahun",
+      "Waktu Analisis",
     ];
 
     const rows = analysisValues.map((a) => [
-      `"${a.coastName}"`,
+      escapeCsvField(a.coastName),
       a.riskScore,
       a.riskLevel,
       a.waveH,
       a.currentS,
       a.shorelineChange,
-      `"${a.prediction5yr}"`,
-      `"${new Date(a.timestamp).toLocaleString("id-ID")}"`,
+      escapeCsvField(a.prediction5yr),
+      escapeCsvField(new Date(a.timestamp).toLocaleString("id-ID")),
     ]);
 
-    const csv = [headers, ...rows]
-      .map((r) => r.join(","))
-      .join("\n");
+    const BOM = "\uFEFF";
+    const csv =
+      BOM +
+      [headers.map(escapeCsvField), ...rows]
+        .map((r) => r.join(","))
+        .join("\r\n");
 
-    const blob = new Blob([csv], {
-      type: "text/csv;charset=utf-8;",
-    });
+    try {
+      const blob = new Blob([csv], {
+        type: "text/csv;charset=utf-8;",
+      });
 
-    const url = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `coastal-report-${tab.toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
+      );
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `coastal-report-${tab.toLowerCase()}-${Date.now()}.csv`;
-    link.click();
-
-    URL.revokeObjectURL(url);
+      setExportStatus("success");
+      setTimeout(() => setExportStatus("idle"), 2000);
+    } catch (err) {
+      console.error("Export CSV gagal:", err);
+    }
   };
 
   // BAR CHART
@@ -241,8 +265,8 @@ export default function AdminReportPage() {
             siklus ·{" "}
             <span
               className={`font-bold ${agentStatus === "running"
-                  ? "text-lime-400"
-                  : "text-slate-500"
+                ? "text-lime-400"
+                : "text-slate-500"
                 }`}
             >
               {agentStatus}
@@ -250,12 +274,33 @@ export default function AdminReportPage() {
           </p>
         </div>
 
-        <button
-          onClick={exportCSV}
-          className="self-start bg-cyan-400 hover:bg-cyan-300 text-slate-950 px-6 py-3 rounded-xl font-bold text-sm"
-        >
-          ⬇ Export CSV
-        </button>
+        {/* EXPORT BUTTON */}
+        <div className="self-start flex flex-col items-end gap-1">
+          <button
+            onClick={exportCSV}
+            disabled={exportStatus !== "idle"}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200
+              ${exportStatus === "success"
+                ? "bg-lime-400 text-slate-950 cursor-default"
+                : exportStatus === "empty"
+                  ? "bg-slate-600 text-slate-300 cursor-default"
+                  : "bg-cyan-400 hover:bg-cyan-300 text-slate-950 active:scale-95"
+              }`}
+          >
+            {exportStatus === "success" ? (
+              <>✓ Berhasil Diunduh</>
+            ) : exportStatus === "empty" ? (
+              <>⚠ Tidak Ada Data</>
+            ) : (
+              <>⬇ Export CSV</>
+            )}
+          </button>
+          {exportStatus === "idle" && analysisValues.length > 0 && (
+            <span className="text-[10px] text-slate-500">
+              {analysisValues.length} baris · {tab}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* SUMMARY */}
@@ -302,8 +347,8 @@ export default function AdminReportPage() {
                   key={t}
                   onClick={() => setTab(t)}
                   className={`px-4 py-1.5 text-xs font-black ${tab === t
-                      ? "bg-cyan-400 text-slate-950"
-                      : "text-slate-400"
+                    ? "bg-cyan-400 text-slate-950"
+                    : "text-slate-400"
                     }`}
                 >
                   {t}

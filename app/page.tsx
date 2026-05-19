@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import {
   Radar,
   Brain,
@@ -70,7 +71,6 @@ const pillars = [
   },
 ];
 
-// Coastal monitoring points across Indonesia
 const coastalPoints = [
   {
     lat: -1.1398,
@@ -152,7 +152,6 @@ const statusLabel = {
   aman: "AMAN",
 };
 
-// Leaflet Map Component
 function CoastalMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -186,7 +185,6 @@ function CoastalMap() {
 
       mapInstanceRef.current = map;
 
-      // Dark tile layer (CartoDB Dark Matter)
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
@@ -196,15 +194,12 @@ function CoastalMap() {
         }
       ).addTo(map);
 
-      // Attribution small
       L.control.attribution({ position: "bottomright", prefix: false }).addTo(map);
 
-      // Add markers for each coastal point
       coastalPoints.forEach((point) => {
         const color = statusColor[point.status];
         const label = statusLabel[point.status];
 
-        // Custom circle marker
         const marker = L.circleMarker([point.lat, point.lng], {
           radius: 10,
           fillColor: color,
@@ -214,7 +209,6 @@ function CoastalMap() {
           fillOpacity: 0.85,
         }).addTo(map);
 
-        // Popup content
         const popupContent = `
           <div style="
             background: #0f2137;
@@ -265,7 +259,6 @@ function CoastalMap() {
           className: "aquavion-popup",
         });
 
-        // Pulse effect using a second transparent circle
         L.circleMarker([point.lat, point.lng], {
           radius: 18,
           fillColor: color,
@@ -276,7 +269,6 @@ function CoastalMap() {
         }).addTo(map);
       });
 
-      // Inject custom popup styles
       const style = document.createElement("style");
       style.textContent = `
         .aquavion-popup .leaflet-popup-content-wrapper {
@@ -328,9 +320,12 @@ export default function AquavionPage() {
           <div className="text-2xl font-black tracking-tight text-cyan-600">
             AQUAVION
           </div>
-          <button className="px-6 py-2.5 rounded-full border border-slate-300 font-semibold text-slate-700 hover:bg-slate-100 transition text-sm">
+          <Link
+            href="/auth/login"
+            className="px-6 py-2.5 rounded-full border border-slate-300 font-semibold text-slate-700 hover:bg-slate-100 transition text-sm"
+          >
             Login
-          </button>
+          </Link>
         </nav>
       </header>
 
@@ -358,13 +353,6 @@ export default function AquavionPage() {
           </p>
 
           <div className="flex flex-wrap gap-4 mt-10">
-            <a
-              href="/stackholder/dashboard"
-              className="px-8 py-4 rounded-2xl bg-cyan-500 text-black font-bold flex items-center gap-2 hover:scale-105 transition"
-            >
-              <Compass className="w-5 h-5" />
-              Open Dashboard
-            </a>
             <a
               href="/public/peta"
               className="px-8 py-4 rounded-2xl border border-white/10 text-white flex items-center gap-2 hover:bg-white/5 transition"

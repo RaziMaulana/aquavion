@@ -24,9 +24,6 @@ import {
   riskHex,
 } from "@/lib/agentStore";
 
-// =======================
-// CHART SETUP
-// =======================
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -37,9 +34,6 @@ ChartJS.register(
   Legend
 );
 
-// =======================
-// LEAFLET COMPONENTS
-// =======================
 const MapContainer = dynamic(
   () => import("react-leaflet").then((m) => m.MapContainer),
   { ssr: false }
@@ -196,16 +190,10 @@ export default function AdminDashboardPage() {
     });
   };
 
-  // =======================
-  // LOADING SAFE
-  // =======================
   if (!mounted || !L) {
     return <div className="h-screen bg-slate-950" />;
   }
 
-  // =======================
-  // UI
-  // =======================
   return (
     <div className="min-h-screen bg-slate-950 text-white p-6 max-w-7xl mx-auto">
       {/* HEADER */}

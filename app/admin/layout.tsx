@@ -18,9 +18,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useAgentStore, COASTAL_REGISTRY } from "@/lib/agentStore";
 
-/* ─────────────────────────────────────────────
-   NAV
-───────────────────────────────────────────── */
 const navLinks = [
   {
     href: "/admin/dashboard",
@@ -33,7 +30,7 @@ const navLinks = [
     icon: BarChart3,
   },
   {
-    href: "/admin/stackholder", // FIXED
+    href: "/admin/stackholder",
     label: "Stakeholder",
     icon: Users,
   },
@@ -49,9 +46,6 @@ const navLinks = [
   },
 ];
 
-/* ─────────────────────────────────────────────
-   BOOTSTRAP
-───────────────────────────────────────────── */
 function AgentBootstrap() {
   const pathname = usePathname();
   const bootRef = useRef(false);
@@ -68,8 +62,6 @@ function AgentBootstrap() {
       }
     }
 
-    // Saat route berubah:
-    // jika status running tapi timer putus, startAgent akan recover
     if (state.agentStatus === "running") {
       state.startAgent();
     }
@@ -78,9 +70,6 @@ function AgentBootstrap() {
   return null;
 }
 
-/* ─────────────────────────────────────────────
-   MAIN LAYOUT
-───────────────────────────────────────────── */
 export default function AdminLayout({
   children,
 }: {
@@ -157,7 +146,7 @@ export default function AdminLayout({
 
                 <div className="hidden sm:block">
                   <h1 className="text-lg font-black tracking-tight text-white">
-                    OquaVion
+                    AquaVion
                     <span className="text-cyan-400"> ID</span>
                   </h1>
 
@@ -326,7 +315,7 @@ export default function AdminLayout({
           <div className="max-w-7xl mx-auto px-6 lg:px-10 py-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-600">
               <span>
-                © 2026 CoastalGuard ID · Indonesian Maritime Intelligence Grid
+                © 2026 AquaVion · Indonesian Maritime Intelligence Grid
               </span>
 
               <span className="flex items-center gap-2">

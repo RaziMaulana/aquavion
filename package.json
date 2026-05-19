@@ -12,6 +12,7 @@
     "@langchain/core": "^1.1.45",
     "@langchain/groq": "^1.2.0",
     "chart.js": "^4.5.1",
+    "jspdf": "^4.2.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.14.0",
     "next": "16.2.6",
