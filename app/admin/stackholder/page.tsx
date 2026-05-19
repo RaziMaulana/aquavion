@@ -103,7 +103,7 @@ export default function AdminStakeholderPage() {
         ? {
           ...task,
           assignee,
-          status: "in_progress",
+          status: "in_progress" as const,
         }
         : task
     );
@@ -118,7 +118,7 @@ export default function AdminStakeholderPage() {
       task.id === taskId
         ? {
           ...task,
-          status: "done",
+          status: "done" as const,
         }
         : task
     );
