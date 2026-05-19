@@ -70,12 +70,11 @@ const STAKEHOLDERS: Stakeholder[] = [
 ];
 
 export default function AdminStakeholderPage() {
-  const {
-    allTasks,
-    latestInsight,
-    analyses,
-    setState,
-  } = useAgentStore();
+  const allTasks = useAgentStore((s) => s.allTasks);
+  const latestInsight = useAgentStore((s) => s.latestInsight);
+  const analyses = useAgentStore((s) => s.analyses);
+
+  const setState = useAgentStore.setState;
 
   const [filter, setFilter] = useState("all");
 
